@@ -21,7 +21,7 @@ import csv
 
 api_keys = ['AIzaSyCkKz_YpH-Rk5lJs959DAeH5EnubO_347Q', 'AIzaSyA78uY-pger-1sEMfR30Nvb9PyS3mDbUd0', 'AIzaSyBO0dIx8jmoFKbtXUtmfgvdceXLo0fDoeE', 'AIzaSyCdZ-2ov_zOysY_7o-VTY6tnlvKSrf1810']
 
-blah = 'AIzaSyBtjsAaMB79mYY8Fz2CsR85fPfhR1Z4RQM'
+blah = 'AIzaSyBwQPC59fau2aggLlGZeLiUWPfh2xajKtg'
 
 
 def input_addr(file):
@@ -36,15 +36,15 @@ def input_addr(file):
                 address = row['Property address']
 
                 if id < 2400:
-                    api_key = api_keys[2]
+                    api_key = blah
                     res = send_req(address, api_key)
                     writer.writerow([id, p_id, address, res[0], res[1], '\n'])
                     print(row)
-                elif id < 4800:
-                    api_key = api_keys[3]
-                    res = send_req(address, api_key)
-                    writer.writerow([id, p_id, address, res[0], res[1], '\n'])
-                    print(row)
+                # elif id < 4800:
+                #     api_key = api_keys[3]
+                #     res = send_req(address, api_key)
+                #     writer.writerow([id, p_id, address, res[0], res[1], '\n'])
+                #     print(row)
                 # elif id < 7500:
                 #     api_key = api_keys[2]
                 #     res = send_req(address, api_key)
