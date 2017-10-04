@@ -11,50 +11,64 @@ import requests
 import time
 import csv
 
-api_key = 'AIzaSyCkKz_YpH-Rk5lJs959DAeH5EnubO_347Q'
-splitter = '#'
 
+api_keys = ['AIzaSyCkKz_YpH-Rk5lJs959DAeH5EnubO_347Q', 'AIzaSyA78uY-pger-1sEMfR30Nvb9PyS3mDbUd0', 'AIzaSyBO0dIx8jmoFKbtXUtmfgvdceXLo0fDoeE', 'AIzaSyCdZ-2ov_zOysY_7o-VTY6tnlvKSrf1810']
 
 def input_addr(file):
-    with open(file) as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            id = int(row['id'])
-            if id <= 2400:
-                print(row)
+    with open(file, 'rb') as csvfile:
+        with open('output.csv', 'wb') as output:
+            reader = csv.DictReader(csvfile)
+            writer = csv.writer(output)
+            writer.writerow(['ID', 'Parcel ID', 'Property address', 'Lat', 'Lng', '\n'])
+            for row in reader:
+                id = int(row['ID'])
+                p_id = row['Parcel ID']
+                address = row['Property address']
 
-    print('DONE')
+                if id <= 2499:
+                    api_key = api_keys[0]
+                    res = send_req(address, api_key)
+                    writer.writerow([id, p_id, address, res[0], res[1], '\n'])
+                    print(row)
+                elif id <= 4999:
+                    api_key = api_keys[1]
+                    res = send_req(address, api_key)
+                    writer.writerow([id, p_id, address, res[0], res[1], '\n'])
+                    print(row)
+                elif id <= 7499:
+                    api_key = api_keys[2]
+                    res = send_req(address, api_key)
+                    writer.writerow([id, p_id, address, res[0], res[1], '\n'])
+                    print(row)
+                elif id <= 9999:
+                    api_key = api_keys[3]
+                    res = send_req(address, api_key)
+                    writer.writerow([id, p_id, address, res[0], res[1], '\n'])
+                    print(row)
+                else:
+                    continue
+
+    print('IO DONE')
 
 
 
-def send_req(addr):
+def send_req(addr, api_key):
     # https: // maps.googleapis.com / maps / api / geocode / json?address = 2829 + Centerwood + Court, +San + Jose, +CA & key = AIzaSyCkKz_YpH - Rk5lJs959DAeH5EnubO_347Q
-    time.sleep(0.1)
+    time.sleep(0.05)
     url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + addr + '& key =' + api_key
     r = requests.get(url)
     r_json = r.json()
+    try:
+        lat = str(r_json['results'][0]['geometry']['location']['lat'])
+        lng = str(r_json['results'][0]['geometry']['location']['lng'])
+        print("lat is " + lat)
+        print("lng is " + lng)
+    except:
+        lat = ''
+        lng = ''
 
-    lat = str(r_json['results'][0]['geometry']['location']['lat'])
-    lng = str(r_json['results'][0]['geometry']['location']['lng'])
-    print("lat is " + lat)
-    print("lng is " + lng)
+    return [lat, lng]
 
-def send_coor(lat, lng):
-    url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '& key =' + api_key
-    print(url)
-    r = requests.get(url)
-    r_json = r.json()
-
-    addr = r_json['results'][0]['formatted_address']
-
-    print(addr)
-
-
-def output_addr():
-
-
-
-    print()
 
 if __name__ == '__main__':
     # send_req('1246 Curtiss Av San Jose, CA 95125')
